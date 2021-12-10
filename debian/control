@@ -1,0 +1,32 @@
+Source: fm-radio-service
+Priority: optional
+Section: libs
+Maintainer: Alberto Mardegan <mardy@users.sourceforge.net>
+Build-Depends: cmake,
+               debhelper (>= 9),
+               pkg-config,
+               libpulse-dev,
+               libpulse-mainloop-glib0,
+               qtbase5-dev,
+               lcov <!nocheck>,
+               libqtdbusmock1-dev <!nocheck>,
+               libqtdbustest1-dev <!nocheck>,
+               pulseaudio <!nocheck>,
+               pulseaudio-utils <!nocheck>,
+               python3-dbus <!nocheck>,
+               python3-dbusmock <!nocheck>,
+               python3-gi <!nocheck>,
+               python3-pytest <!nocheck>,
+Standards-Version: 3.9.6
+Homepage: https://gitlab.com/ubports/core/fm-radio-service
+Vcs-Git: https://gitlab.com/ubports/core/fm-radio-service.git
+
+Package: fm-radio-service
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: System service for FM radio tuning and playback
+ The FM radio service is a background daemon, activated on demand, which is
+ responsible for playback of FM radio channels.
+ .
+ This package contains the runtime.

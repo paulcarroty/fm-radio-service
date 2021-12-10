@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.lomiri.FMRadioService
+Exec=${CMAKE_CURRENT_BINARY_DIR}/service_wrapper.sh

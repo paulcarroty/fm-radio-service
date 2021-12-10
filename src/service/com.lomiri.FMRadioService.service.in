@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=com.lomiri.FMRadioService
+Exec=${CMAKE_INSTALL_FULL_BINDIR}/${TARGET}
+User=root

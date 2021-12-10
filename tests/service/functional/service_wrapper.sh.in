@@ -1,0 +1,2 @@
+#! /bin/sh
+${FM_RADIO_BINARY} 2> service.stderr > service.stdout

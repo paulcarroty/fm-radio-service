@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+# export DH_VERBOSE=1
+
+export DPKG_GENSYMBOLS_CHECK_LEVEL=4
+
+include /usr/share/dpkg/default.mk
+
+ifneq (,$(findstring coverage,$(DEB_BUILD_OPTIONS)))
+CONFIGURE_FLAGS += -DCMAKE_BUILD_TYPE=Coverage
+else ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+CONFIGURE_FLAGS += -DCMAKE_BUILD_TYPE=Debug
+endif
+
+ifneq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
+CONFIGURE_FLAGS += -DENABLE_TESTS=OFF
+endif
+
+%:
+	dh $@ --fail-missing --parallel
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CONFIGURE_FLAGS)
