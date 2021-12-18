@@ -91,6 +91,54 @@ def other_client(request, bus_obj, current_path):
 
 
 @pytest.fixture(scope="session")
+def bin_path(request):
+    path = os.environ['PATH_FOR_TESTS']
+    os.makedirs(path, exist_ok=True)
+    return Path(path)
+
+
+@pytest.fixture(scope="function")
+def cherokee(request, bin_path):
+    getprop = bin_path / "getprop"
+    print('Getprop: {}'.format(getprop))
+    getprop.write_text('#! /bin/sh\necho cherokee\n')
+    getprop.chmod(0o777)
+
+    def teardown():
+        print('Removing getprop')
+        getprop.unlink()
+    request.addfinalizer(teardown)
+
+
+@pytest.fixture(scope="function")
+def bridge_handler(request):
+    return lambda handler: print('Got: {}'.format(handler.rfile.readline()))
+
+@pytest.fixture(scope="function")
+def fm_bridge(request, bin_path, bridge_handler):
+    # Create a TCP server: the fake fm-bridge will connect to it and forward
+    # all the communication. In this way we'll be able to send arbitrary
+    # responses to the cherokee backend.
+    import socketserver
+    class TCPHandler(socketserver.StreamRequestHandler):
+        def handle(self):
+            pass
+
+    server = socketserver.TCPServer(('localhost', 0), TCPHandler)
+
+    bridge = bin_path / "fm-bridge"
+    bridge.write_text('#! /bin/sh\nexec /bin/nc {} {}\n'.format(*server.server_address))
+    bridge.chmod(0o777)
+
+    def teardown():
+        bridge.unlink()
+        server.server_close()
+    request.addfinalizer(teardown)
+
+    return server
+
+
+@pytest.fixture(scope="session")
 def current_path():
     return Path(__file__).parent
 
