@@ -19,10 +19,26 @@
 #include "radio_control_factory.h"
 
 #include "abstract_radio_control.h"
+#include "cherokee/radio_control.h"
+
+#include <QVector>
 
 using namespace FmRadioService;
 
 AbstractRadioControl *RadioControlFactory::createRadioControl()
 {
+    AbstractRadioControl *control = nullptr;
+
+    using Constructor = std::function<AbstractRadioControl*()>;
+    const QVector<Constructor> backends = {
+        []() { return new Cherokee::RadioControl(); },
+    };
+    for (const auto backend: backends) {
+        control = backend();
+        if (control->checkHardware()) {
+            return control;
+        }
+        delete control;
+    }
     return nullptr;
 }

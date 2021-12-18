@@ -57,6 +57,7 @@ add_executable(${TARGET}
 target_link_libraries(${TARGET} PRIVATE
     FmRadioCommon
     RadioControl
+    BackendCherokee
     Qt5::Core
     Qt5::DBus
     ${PULSE_AUDIO_LIBRARIES}
@@ -76,3 +77,5 @@ configure_file(${SERVICE_FILE}.in ${SERVICE_FILE})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${SERVICE_FILE}
     DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services
 )
+
+add_subdirectory(cherokee)
