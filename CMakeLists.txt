@@ -42,3 +42,5 @@ if(ENABLE_TESTS)
         FILTER tests/* obj-*/*
     )
 endif()
+
+add_subdirectory(tools)

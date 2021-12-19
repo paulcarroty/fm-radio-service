@@ -31,3 +31,16 @@ Description: System service for FM radio tuning and playback
  responsible for playback of FM radio channels.
  .
  This package contains the runtime.
+
+Package: fm-radio-tools
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         fm-radio-service
+Description: Command-line tool for testing FM radio tuning and playback
+ The FM radio service is a background daemon, activated on demand, which is
+ responsible for playback of FM radio channels.
+ .
+ This package contains a command line tool which can be used to activate the
+ radio.
