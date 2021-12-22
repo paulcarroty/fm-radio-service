@@ -58,6 +58,7 @@ target_link_libraries(${TARGET} PRIVATE
     FmRadioCommon
     RadioControl
     BackendCherokee
+    BackendMediatek
     Qt5::Core
     Qt5::DBus
     ${PULSE_AUDIO_LIBRARIES}
@@ -79,3 +80,4 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${SERVICE_FILE}
 )
 
 add_subdirectory(cherokee)
+add_subdirectory(mediatek)

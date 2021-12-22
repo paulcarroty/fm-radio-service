@@ -20,6 +20,7 @@
 
 #include "abstract_radio_control.h"
 #include "cherokee/radio_control.h"
+#include "mediatek/radio_control.h"
 
 #include <QVector>
 
@@ -32,6 +33,7 @@ AbstractRadioControl *RadioControlFactory::createRadioControl()
     using Constructor = std::function<AbstractRadioControl*()>;
     const QVector<Constructor> backends = {
         []() { return new Cherokee::RadioControl(); },
+        []() { return new Mediatek::RadioControl(); },
     };
     for (const auto backend: backends) {
         control = backend();
