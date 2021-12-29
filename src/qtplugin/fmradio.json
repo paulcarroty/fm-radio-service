@@ -1,0 +1,4 @@
+{
+    "Keys": ["com.lomiri.fmradio"],
+    "Services": ["org.qt-project.qt.radio"]
+}

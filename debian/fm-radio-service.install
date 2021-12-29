@@ -1,2 +1,3 @@
 usr/bin/fm-radio-service
+usr/lib/*/qt5/plugins
 usr/share/dbus-1

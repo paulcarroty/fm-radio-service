@@ -8,6 +8,7 @@ Build-Depends: cmake,
                libpulse-dev,
                libpulse-mainloop-glib0,
                qtbase5-dev,
+               qtmultimedia5-dev,
                lcov <!nocheck>,
                libqtdbusmock1-dev <!nocheck>,
                libqtdbustest1-dev <!nocheck>,
@@ -26,6 +27,7 @@ Package: fm-radio-service
 Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
+Provides: qtmedia-fm-radio-service
 Description: System service for FM radio tuning and playback
  The FM radio service is a background daemon, activated on demand, which is
  responsible for playback of FM radio channels.
