@@ -17,6 +17,14 @@ dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
 
 @pytest.fixture(scope="function")
+def fm_radio_service_full(request, bus_obj, pulseaudio, cherokee, fm_bridge,
+                          fm_radio_service):
+    """ Just a composition of fixtures which gives a working environment for
+    the fm-radio-service """
+    return (fm_radio_service, fm_bridge)
+
+
+@pytest.fixture(scope="function")
 def fm_radio_inactivity_timeout(request):
     return '1'  # seconds
 

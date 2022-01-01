@@ -46,6 +46,31 @@ class TestMediaHub:
         assert exception.value.get_dbus_name() == \
             FMRadio.Error.ResourceError
 
+    def test_unique_session(self, bus_obj, fm_radio_service_full,
+                            other_client):
+        _, fm_bridge = fm_radio_service_full
+        client = other_client
+
+        service = FMRadio.Service(bus_obj)
+
+        tuner_path = service.open_tuner()
+        (socket, client_address) = fm_bridge.get_request()
+        tuner = FMRadio.Tuner(bus_obj, tuner_path)
+
+        # Open the tuner
+
+        reply = tuner.start(call_async=True)
+        commands = socket.recv(4096).splitlines()
+        socket.sendall(b'fm_seek_cmpl_cb\n')
+        socket.sendall(b'fm_tune_cb 88000\n')
+        tuner.loop.run()
+        assert reply.finished
+
+        # Open the same tuner from a different process
+        client.writeline('start')
+        errors = client.stderr.read()
+        assert b'The tuner is being used by another application' in errors
+
     def test_cherokee_backend_without_bridge(self, bus_obj, cherokee,
                                              fm_radio_service):
         service = FMRadio.Service(bus_obj)
