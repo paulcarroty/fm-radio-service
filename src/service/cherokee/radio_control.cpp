@@ -84,16 +84,27 @@ RadioControl::~RadioControl()
 
 bool RadioControl::checkHardware()
 {
+    static const QStringList properties {
+        QStringLiteral("vendor.bluetooth.soc"),
+        QStringLiteral("vendor.qcom.bluetooth.soc"),
+    };
+
     QProcess getprop;
-    getprop.start("getprop", { "vendor.bluetooth.soc" });
-    bool ok = getprop.waitForStarted(5000);
-    if (!ok) {
-        qDebug() << "'getprop' not found";
-        return false;
+    QByteArray output;
+    for (const QString &property: properties) {
+        getprop.start("getprop", { property });
+        bool ok = getprop.waitForStarted(5000);
+        if (!ok) {
+            qDebug() << "'getprop' not found";
+            return false;
+        }
+        getprop.waitForFinished(2000);
+        output = getprop.readAllStandardOutput().trimmed();
+        if (!output.isEmpty()) {
+            qDebug() << property << "=" << output;
+            break;
+        }
     }
-    getprop.waitForFinished(2000);
-    QByteArray output = getprop.readAllStandardOutput().trimmed();
-    qDebug() << "vendor.bluetooth.soc =" << output;
     if (output != "cherokee") {
         // not our chip
         return false;
@@ -101,7 +112,7 @@ bool RadioControl::checkHardware()
 
     // Try starting the bridge program
     m_bridge.start();
-    ok = m_bridge.waitForStarted(5000);
+    bool ok = m_bridge.waitForStarted(5000);
     QByteArray errorOutput = m_bridge.readAllStandardError();
     if (!ok) {
         qWarning() << "could not start fm-bridge program:" << errorOutput;
