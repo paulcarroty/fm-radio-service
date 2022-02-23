@@ -495,6 +495,9 @@ void RadioControl::raise(Error::Code code, const QString &message)
 
 void RadioControl::cancelSearch()
 {
+    /* There's no way to stop a hardware search, but we can stop the manual
+     * search by just setting the isSearching flag */
+    updateIsSearching(false);
 }
 
 QPair<int, int> RadioControl::frequencyRange(Band band) const
@@ -519,6 +522,13 @@ void RadioControl::manualSearch(int currentFreq, int direction)
 {
     const int freqMin = FMR_BAND_FREQ_L;
     const int freqMax = FMR_BAND_FREQ_H;
+
+    if (!isSearching()) {
+        qDebug() << "Search was stopped";
+        // Reset to the previous frequency
+        COM_tune(fd(), frequency() / 100, m_fmBand);
+        return;
+    }
 
     int inc = direction == 1 ? 1 : -1;
     currentFreq += inc;
@@ -665,6 +675,9 @@ void RadioControl::stop()
     }
 
     disableRds();
+    if (isSearching()) {
+        cancelSearch();
+    }
     COM_pwr_down(fd(), FM_RX);
     m_radioDevice.close();
     m_initializationState = Uninitialized;
