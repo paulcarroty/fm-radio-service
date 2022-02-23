@@ -528,6 +528,13 @@ void RadioControl::manualSearch(int currentFreq, int direction)
         currentFreq = freqMax;
     }
 
+    /* Check if we looped over */
+    int startingFrequency = frequency() / 100;
+    if (currentFreq == startingFrequency) {
+        updateIsSearching(false);
+        return;
+    }
+
     bool failed = false;
     int ret = COM_tune(fd(), currentFreq, m_fmBand);
     if (ret != 0) {
