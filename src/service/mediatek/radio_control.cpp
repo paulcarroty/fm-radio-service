@@ -412,6 +412,9 @@ bool RadioControl::initAudio()
     }
 
     {
+        // Test for the E5
+        setAnalogReg(SPK_CON1, 0x0, 0xffff);
+
         // AudioMachineDevice AnalogOpen DeviceType = DEVICE_OUT_HEADSETR
         setAnalogReg(AUDTOP_CON6, 0xf7f2, 0xffff);
         setAnalogReg(AUDTOP_CON0, 0x7000, 0xf000);
